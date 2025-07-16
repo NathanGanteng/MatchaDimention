@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MatchaDimention</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: white;
+      color: black;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      overflow-x: hidden;
+      transition: background 1s ease, color 0.5s ease;
+    }
+
+    #starter {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+      font-size: 1.4em;
+      padding: 2rem;
+      cursor: pointer;
+    }
+
+    #container {
+      white-space: pre-wrap;
+      text-align: left;
+      padding-bottom: 5rem;
+    }
+
+    .character-img {
+      width: 150px;
+      margin: 1rem 0;
+      animation: float 2s infinite ease-in-out;
+    }
+
+    .centered-date {
+  text-align: center;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+
+    .bucin-img {
+  width: 90%;
+  max-width: 400px;
+  display: block;
+  margin: 1rem auto;
+  animation: float 2s infinite ease-in-out;
+}
+
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    #nextBtn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 25px;
+      font-size: 1.1em;
+      background-color: #3b744d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    #waBtn {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 25px;
+      font-size: 1.1em;
+      background-color: white;
+      color: black;
+      border: 2px solid black;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 5;
+}
+
+
+    #image2 {
+      width: 150px;
+      margin: 1rem 0; 
+      display: none;
+    }
+
+    #image3 {
+  width: 90%;
+  max-width: 400px;
+  display: none;
+  margin: 1rem auto;
+  display: none;
+}
+
+
+    
+
+    audio {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="starter">▶ Tap untuk mulai</div>
+
+<div id="container"></div>
+<img id="characterImage" src="gambar1.png" alt="PimPim" class="character-img" style="display: none;" />
+<img id="image2" src="img/gacor2.png" alt="Image" style="display: none;" />
+<img id="image3" src="img/gacor3.png" alt="Image" style="display: none;" />
+
+<button id="nextBtn">Gasss!</button>
+<button id="waBtn" style="display: none;">Chatt Nathan</button>
+
+<audio id="bgmusic" loop>
+  <source src="soundtrack.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+  const starter = document.getElementById('starter');
+  const container = document.getElementById('container');
+  const music = document.getElementById('bgmusic');
+  const nextBtn = document.getElementById('nextBtn');
+  const characterImg = document.getElementById('characterImage');
+  const image3 = document.getElementById('image3');
+  const image2 = document.getElementById('image2');
+
+  const messages = [
+    "Hi Kiki :)\nKenalin Nama aku PimPim",
+    "[gambar 1]",
+    "Aku adalah mahkluk imut dan lucu yang di buat sama Papa\nKatanya si yang biasanya kamu panggil Om Botak :D",
+    "Aku mau ngenalin Tempat ini\nIni adalah dimensi yang\ndi buat sama Papa\nTrus dia kasih nama \"MatchaDimention\"",
+    "Apa?\nMirip minuman matcha?\nGa salah kok\nPapa kasih nama itu juga karena pas kecil aku kebanyakan minum Matcha :)",
+    "Kayaknya tempat ini masih terkesan misterius...",
+    "[background berubah]",
+    "Gimana? Bagus Kan?! :D",
+    "Yuk kita keliling !!"
+  ];
+
+  const lanjutMessages = [
+    "",
+    "Kayanya aku harus ganti baju deh",
+    "[gambar 2]",
+    "",
+    "Nah gini kan kereeeennnn",
+    "Jadi tugas aku adalah\nUntuk memandu kaka disini\nBtw kata papa, kaka itu galak\nTapi pas aku liat, mana mungkin\norang secantik kaka galak",
+    "Wih ada apa tuh di depan!",
+    "Gambar?",
+    "[gambar 3]",
+    "",
+    "Ternyata kaka bucin juga ya... AHAHAHAHA",
+    "Oh iyaa...\nKata Papa, Kaka hari ini Ulang Tahun",
+    "SELAMAAAAATT ULANGG TAHUNNNN !!!",
+    "Panjang umur, Sehat selalu\nMakin pinter, Tambah Cakep\nPOKOKNYA PIMPIM DOAIN YANG TERBAIK BUAT KAKA DEH!",
+    "Nanti beliin PimPim Matcha ya.. Hehehehe",
+    "Bentar-Bentar... Ada Pesan Dari Papa nih",
+    "[putih]",
+    "> Hai",
+    "> Ini aku nathan",
+    "> Jujur aku gabisa bikin kata kata\n> Jadi aku cuman mau bilang\n> HAPPY BIRTHDAYYYY",
+    "> Apalagi ya...\n> Aku ga ahli kalo bikin ucapan :)",
+    "> Selamat menempuh kelas 11!\n> Dan Selamat bentar lagi ldr HAHAHA",
+    "> Udah Sih.... itu aja\n> Btw aku punya sesuatu...",
+    "> Happy Watching !!",
+    "",
+
+    "[bucin1]",
+    "2 Oktober 2024",
+    "",
+
+    "[bucin2]",
+    "11 Oktober 2024",
+    "",
+    
+    "[bucin3]",
+    "24 Oktober 2024",
+    "",
+
+    "[bucin4]",
+    "9 Desember 2024",
+    "",
+
+    "[bucin5]",
+    "14 Desember 2024",
+    "",
+
+    "[bucin6]",
+    "20 Januari 2025",
+    "",
+
+    "[bucin7]",
+    "21 Januari 2025",
+    "",
+
+    "[bucin8]",
+    "26 April 2025",
+    "",
+
+    "[bucin9]",
+    "2 Mei 2025",
+    "",
+
+    "[bucin10]",
+    "9 Mei 2025",
+    "",
+
+    "[bucin11]",
+    "17 Mei 2025",
+    "",
+
+    "",
+    "> Ga kerasa yaa udah setahun aja kita kenal\n> Aku sama PimPim pamitt yaaaaa\n> Babaaaayyyy",
+    "> Lopppyuuu Kikiiii <3",
+    "",
+    "[kirim_wa]",
+  ];
+
+  let currentMessage = 0;
+  let typingIndex = 0;
+  let currentText = "";
+  let isTyping = false;
+  let afterGas = false;
+  let lanjutIndex = 0;
+
+  function typeNextChar() {
+    if (typingIndex < currentText.length) {
+      container.innerHTML += currentText.charAt(typingIndex);
+      typingIndex++;
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      setTimeout(typeNextChar, 70);
+    } else {
+      isTyping = false;
+      if (!afterGas && currentMessage < messages.length) {
+        currentMessage++;
+        setTimeout(showNextMessage, 800);
+      } else if (afterGas && lanjutIndex < lanjutMessages.length) {
+        lanjutIndex++;
+        setTimeout(showLanjut, 800);
+      }
+    }
+  }
+
+  function showNextMessage() {
+    if (currentMessage >= messages.length) {
+      nextBtn.style.display = "block";
+      return;
+    }
+
+    const msg = messages[currentMessage];
+
+    if (msg === "[gambar 1]") {
+      characterImg.style.display = "block";
+      characterImg.src = "gambar1.png";
+      if (!container.contains(characterImg)) {
+        container.appendChild(characterImg);
+      }
+      currentMessage++;
+      setTimeout(showNextMessage, 800);
+      return;
+    }
+
+    if (msg === "[background berubah]") {
+      document.body.style.backgroundColor = "#4d9660";
+      document.body.style.color = "white";
+      characterImg.src = "gambar2.png?v=" + new Date().getTime();
+      console.log("Background berubah → Gambar diganti ke gambar2.png");
+      currentMessage++;
+      setTimeout(showNextMessage, 800);
+      return;
+    }
+
+    currentText = msg + "\n\n";
+    typingIndex = 0;
+    isTyping = true;
+    typeNextChar();
+  }
+
+  function showLanjut() {
+    if (lanjutIndex >= lanjutMessages.length) return;
+
+    const msg = lanjutMessages[lanjutIndex];
+
+    if (msg === "[gambar 3]") {
+      image3.style.display = "block";
+      container.appendChild(image3);
+      lanjutIndex++;
+      setTimeout(showLanjut, 800);
+      return;
+    }
+
+    if (msg === "[gambar 2]") {
+      image2.style.display = "block";
+      container.appendChild(image2);
+      lanjutIndex++;
+      setTimeout(showLanjut, 800);
+      return;
+    }
+
+    if (msg === "[putih]") {
+      document.body.style.backgroundColor = "white";
+      document.body.style.color = "black";
+      console.log("Background berubah putih");
+      lanjutIndex++;
+      setTimeout(showLanjut, 800);
+      return;
+    }
+
+    // Tambahan gambar bucin1 - bucin11
+    if (/^\[bucin(\d+)\]$/.test(msg)) {
+    const bucinNumber = msg.match(/^\[bucin(\d+)\]$/)[1];
+    const bucinImg = document.createElement("img");
+    bucinImg.src = `gambar/bucin${bucinNumber}.jpg?v=` + new Date().getTime();
+    bucinImg.alt = `Bucin ${bucinNumber}`;
+    bucinImg.className = "bucin-img";
+    container.appendChild(bucinImg);
+    lanjutIndex++;
+    setTimeout(showLanjut, 800);
+    return;
+  }
+
+
+
+    // Tombol wa
+    if (msg === "[kirim_wa]") {
+      const waBtn = document.getElementById("waBtn");
+      waBtn.style.display = "block";
+      lanjutIndex++;
+      setTimeout(showLanjut, 800);
+      return;
+    }
+
+
+    // Tampilkan tanggal di tengah jika cocok format
+   if (/^\d{1,2} \w+ \d{4}$/.test(msg) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(msg)) {
+      const dateEl = document.createElement("div");
+     dateEl.className = "centered-date";
+      dateEl.textContent = msg;
+     container.appendChild(dateEl);
+     lanjutIndex++;
+     setTimeout(showLanjut, 800);
+      return;
+  }
+
+
+
+
+    currentText = msg + "\n\n";
+    typingIndex = 0;
+    isTyping = true;
+    typeNextChar();
+  }
+
+  starter.addEventListener("click", () => {
+    music.play().then(() => {
+      starter.style.display = "none";
+      showNextMessage();
+    });
+  });
+
+  nextBtn.addEventListener("click", () => {
+    nextBtn.style.display = "none";
+    afterGas = true;
+    showLanjut();
+  });
+
+  const waBtn = document.getElementById("waBtn");
+  waBtn.addEventListener("click", () => {
+    const message = encodeURIComponent("awwww kaka lucu banget siii..");
+    window.open("https://wa.me/+6282112435594?text=" + message, "_blank");
+  });
+
+</script>
+
+</body>
+</html>
